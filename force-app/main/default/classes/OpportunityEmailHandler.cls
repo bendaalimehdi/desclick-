@@ -29,6 +29,12 @@ public class OpportunityEmailHandler {
                 System.debug('Error generating PDF: ' + e.getMessage());
                 continue;
             }
+            ContentVersion cv = new ContentVersion();
+                cv.Title = opp.Name + ' Devis';
+                cv.PathOnClient =  opp.Name +'.pdf'; // Name of the file
+                cv.VersionData = pdfBlob;
+                cv.FirstPublishLocationId = opp.Id; // Wherever you want to attach it
+            insert cv;
 
 
                 Messaging.EmailFileAttachment attach = new Messaging.EmailFileAttachment();
