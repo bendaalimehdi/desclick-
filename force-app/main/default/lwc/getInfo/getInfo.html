@@ -1,0 +1,12 @@
+<template>
+    <template if:true={error}>
+        <p>{error}</p>
+    </template>
+    <lightning-dual-listbox
+        name="employees"
+        label="Employees"
+        source-label="Available Employees"
+        selected-label="Selected Employees"
+        options={employeeOptions}
+    ></lightning-dual-listbox>
+</template>
