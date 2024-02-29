@@ -1,19 +1,16 @@
 import getEmployeeNames from '@salesforce/apex/Combobox.getEmployeeNames';
-import { CurrentPageReference } from 'lightning/navigation';
-import { LightningElement, wire } from 'lwc';
-
+import OpportunityId from '@salesforce/schema/OpportunityId';
+import { getFieldValue, getRecord } from 'lightning/uiRecordApi';
+import { LightningElement, api, wire } from 'lwc';
 export default class MyComponent extends LightningElement {
-    employeeOptions = [];
-    error = '';
-    recordId;
-
-    // Wire the current page reference to get the Opportunity Id
-    @wire(CurrentPageReference)
-    wiredPageRef({data, error}) {
+    @api recordId;
+    error;
+    employeeOptions = []; 
+    @wire(getRecord, { recordId: '$recordId', fields: [OpportunityId] })
+    wiredRecord({ error, data }) {
         if (data) {
-            this.recordId = data.attributes.recordId;
-            // Call the Apex method with the Opportunity Id
-            getEmployeeNames({ opportunityId: this.recordId })
+            this.OppId = getFieldValue(data, OpportunityId);
+            getEmployeeNames({ opportunityId: this.OppId })
                 .then(result => {
                     if (result && result.length > 0) {
                         this.employeeOptions = result.map(name => ({ label: name, value: name }));
@@ -26,8 +23,8 @@ export default class MyComponent extends LightningElement {
                     this.error = catchError.body ? catchError.body.message : 'Unknown error';
                 });
         } else if (error) {
-            console.error('Error loading current page reference:', error);
-            this.error = 'Error loading current page reference';
+            console.error('Error loading record', error);
+            this.error = 'Error loading record';
         }
     }
 }

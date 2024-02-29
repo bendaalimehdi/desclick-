@@ -2,11 +2,23 @@
     <template if:true={error}>
         <p>{error}</p>
     </template>
+    <!-- <lightning-card  title="Alerts in LWC">
+        <div class="slds-p-around_small">
+            <lightning-button variant="brand" onclick={handleButtonClick} label="Show Alert"></lightning-button>
+        </div>
+    </lightning-card> -->
+
+
     <lightning-dual-listbox
         name="employees"
         label="Employees"
         source-label="Available Employees"
         selected-label="Selected Employees"
         options={employeeOptions}
-    ></lightning-dual-listbox>
+    >
+    <div class="slds-p-around_small">
+        <lightning-button variant="brand" onclick={wiredPageRef} label="Show Alert"></lightning-button>
+    </div>
+
+</lightning-dual-listbox>
 </template>
