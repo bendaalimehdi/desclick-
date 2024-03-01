@@ -1,41 +1,113 @@
-<apex:page standardController="Opportunity" renderAs="pdf">
+<apex:page standardController="Opportunity" extensions="OpportunityExtensionController"  applyBodyTag="True">
+    <html>
+        <head>
+            <title>Convention de Formation Professionnelle</title>
+        </head>
+        <body>
+           
 
-    <apex:pageBlock title="Devis N°: {!Opportunity.N_Dossier__c}">
-        <apex:pageBlockSection title="Opportunity Information">
-            <apex:outputText value="Account Name: {!Opportunity.Account.Name}" />
-            <br/>
+            <apex:form >
+                <apex:pageBlock >
+                    <apex:pageBlockSection title="Opportunity Information" columns="2">
+                        <apex:outputField value="{!Opportunity.Name}"/>
+                        <apex:outputField value="{!Opportunity.Account.Name}"/>
+                        <apex:outputField value="{!Opportunity.Account.BillingStreet}"/>
+                        <apex:outputField value="{!Opportunity.Account.BillingPostalCode}"/>
+                        <apex:outputField value="{!Opportunity.Account.BillingCity}"/>
+                        <apex:outputField value="{!Opportunity.Contact__r.LastName}"/>
+                        <apex:outputField value="{!Opportunity.Contact__r.FirstName}"/>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
 
-            <apex:outputText value="Account Address: {!Opportunity.Account.BillingStreet}, {!Opportunity.Account.BillingCity}, {!Opportunity.Account.BillingPostalCode}, {!Opportunity.Account.BillingCountry}" />
-            <br/>
+            <h1>CONVENTION DE FORMATION PROFESSIONNELLE</h1>
+            <p>Entre les soussignés :</p>
+            <p>La société DC WEB APS domiciliée au 3, rue Lech Walesa 94270 Le Kremlin Bicêtre et enregistrée sous le numéro de déclaration d'activité 11 94 101 81 94 auprès de la Direction Régionale des Entreprises, de la Concurrence, de la Consommation, du Travail et de l’Emploi en Île de France (DIRECCTE Île de France).</p>
+            <p>La société {!Opportunity.Account.Name} domiciliée {!Opportunity.Account.BillingStreet} {!Opportunity.Account.BillingPostalCode} {!Opportunity.Account.BillingCity} et représentée par :</p>
+            <table>
+                <tr>
+                    <th>Civilité</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Fonction</th>
+                </tr>
+                <tr>
+                    <td>Monsieur</td>
+                    <td>{!Opportunity.Contact__r.LastName}</td> 
+                    <td>{!Opportunity.Contact__r.FirstName}</td> 
+                    <td>Gérant</td>
+                </tr>
+            </table>
 
-            <apex:outputText value="N°Siret: {!Opportunity.Account.Siret__c}" />
-            <br/>
-        </apex:pageBlockSection>
+            <p>Article 1er : Objet de la convention</p>
+            <p>L’organisme DC WEB APS organisera l’action de formation suivante :</p>
+            <p>Intitulé du stage: Hygiène et Sécurité alimentaire</p>
+            <p>Nature de l’action : INTRA présentiel</p>
+            <p>Objectifs opérationnels : joints en annexe</p>
+            <p>Programme et méthodes : joints en annexe</p>
+            <p>Type d’action de formation (article L.6313-1 du Code du travail): Action de formation</p>
+            <p>Durée : 14 heures</p>
+            <p>Lieu: {!Opportunity.Account.Name} domiciliée 9 Place de la Halle 41500 - Mer</p>
+            <p>Dates et horaires : du 15/02/2023 au 16/02/2023 de 9:00 à 12:30 et de 13:30 à 17 :00</p>
 
-<apex:pageBlockSection title="Quote Details" columns="1">
-    <apex:pageBlockTable value="{!Opportunity}" var="opp" style="border:1px solid black;">
-        <apex:column headerValue="Heure de Formation" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Heure_formation__c}" />
-        </apex:column>
-        <apex:column headerValue="Nombre de Stagiaire" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Nombre_de_Stagire__c}" />
-        </apex:column>
-        <apex:column headerValue="Prix Horaire" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Prix_horaire__c}" />
-        </apex:column>
-        <apex:column headerValue="Nom de l'Employé" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Employe__r.Name}" />
-        </apex:column>
-        <apex:column headerValue="Total" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Heure_formation__c * opp.Nombre_de_Stagire__c * opp.Prix_horaire__c}" />
-        </apex:column>
-    </apex:pageBlockTable>
+            <p>Article 2 : Effectif formé</p>
+            <p>L’organisme DC WEB APS animera une/des sessions de formation pour les personnes suivantes :</p>
+            <table>
+                <tr>
+                    <th>Civilité</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Fonction</th>
+                </tr>
+                <apex:repeat value="{!selectedEmployees}" var="emp">
+                    <tr>
+                        
+                        <!-- <td>{!emp.Civility}</td> -->
+                        <!-- <td>{!emp.Last_Name__c}</td> -->
+                        <td>{!emp.Name}</td>
+                        <!-- <td>{!emp.Function}</td> -->
+                    </tr>
+                </apex:repeat>
+            </table>
 
-    <br/>
-    <apex:outputText value="Total TTC: {!Opportunity.Heure_formation__c * Opportunity.Nombre_de_Stagire__c * Opportunity.Prix_horaire__c * 1.18}" style="font-weight:bold; border:1px solid black; padding:5px;" />
-</apex:pageBlockSection>
+            <p>Article 3 : Dispositions financières</p>
+            <p>En contrepartie de cette action de formation, l’employeur s’acquittera des coûts suivants : Frais de formation :</p>
+            <table>
+                <tr>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                    <th>Cout Total H.T</th>
+                    <th>T.V.A 20%</th>
+                    <th>TOTAL GENERAL (TTC)</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1400.00€</td>
+                    <td>1400.00€</td>
+                    <td>280.00€</td>
+                    <td>1680.00€</td>
+                </tr>
+            </table>
 
+            <p>Article 4 : Modalités d’évaluation et de sanction</p>
+            <p>Le contrôle des connaissances sera assuré par la vérification de l’assiduité des participants et l’accent mis sur leur participation constante et active, notamment dans le cadre d’études des cas pratiques, préparées et exposées par les formateurs.</p>
+            <p>Une attestation, précisant la nature et la durée de la session, sera remise aux bénéficiaires à l’issue de la formation (Moyen de contrôle de l’assiduité (attestation d’assiduité + feuilles d’émargement pour les formations en présentiel / attestation d’assiduité + relevé de connexion pour les formations à distance) : attestation d’assiduité + feuilles d’émargement).</p>
 
-    </apex:pageBlock>
+            <p>Article 5 : Modalités de règlement</p>
+            <p>En cas de paiement effectué par un OPCO, l’Etablissement s’engage à effectuer la demande de prise en charge avant le début de la formation.</p>
+            <p>En cas de prise en charge partielle par l’OPCO, la différence de coût restera à la charge de la société {!Opportunity.Account.Name}</p>
 
+            <p>Article 6 : Dédit ou abandon</p>
+            <!-- Add details from Article 6 -->
+
+            <p>Article 7 : Différends éventuels</p>
+            <!-- Add details from Article -->
+
+            <p>Fait en double exemplaire, à Le Kremlin Bicêtre, le 06/01/2023</p>
+            <p>Pour l’entreprise</p>
+            <p>(nom et qualité du signataire)</p>
+            <p>Cachet de l’entreprise cliente</p>
+            <p>Pour l’organisme</p>
+            <p>Faouzi Djaber en Qualité de Président Directeur Général</p>
+        </body>
+    </html>
 </apex:page>

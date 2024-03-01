@@ -7,7 +7,9 @@
             <lightning-button variant="brand" onclick={handleButtonClick} label="Show Alert"></lightning-button>
         </div>
     </lightning-card> -->
-
+    <div class="slds-var-p-around_small">
+        <p>Selected values are: {_selected}</p>
+    </div>
 
     <lightning-dual-listbox
         name="employees"
@@ -15,10 +17,16 @@
         source-label="Available Employees"
         selected-label="Selected Employees"
         options={employeeOptions}
+        onchange={handleChange}
     >
-    <div class="slds-p-around_small">
-        <lightning-button variant="brand" onclick={wiredPageRef} label="Show Alert"></lightning-button>
-    </div>
+   
 
 </lightning-dual-listbox>
+<lightning-button 
+            variant="brand"
+            class="slds-align--absolute-center slds-m-top--large" 
+            label="Send" 
+            title="send" 
+            onclick={sendDataToVFPage}>
+        </lightning-button>
 </template>

@@ -1,11 +1,14 @@
 import getEmployeeNames from '@salesforce/apex/Combobox.getEmployeeNames';
-import OpportunityId from '@salesforce/schema/OpportunityId';
+import OpportunityId from '@salesforce/schema/Opportunity.Id';
 import { getFieldValue, getRecord } from 'lightning/uiRecordApi';
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+
 export default class MyComponent extends LightningElement {
+    _selected = [];
     @api recordId;
     error;
-    employeeOptions = []; 
+   @track employeeOptions = []; 
+   @api selectedEmployees = [];
     @wire(getRecord, { recordId: '$recordId', fields: [OpportunityId] })
     wiredRecord({ error, data }) {
         if (data) {
@@ -27,4 +30,26 @@ export default class MyComponent extends LightningElement {
             this.error = 'Error loading record';
         }
     }
+    get selected() {
+        return this._selected.length ? this._selected : 'none';
+    }
+   // handleChange(event) {
+     //   this._selected = event.detail.value;
+       // // Track selected employees
+        t//his.selectedEmployees = this._selected.map(emp => ({ label: emp, value: emp }));
+
+   // }
+    handleSendDataToVF() {
+        const event = new CustomEvent('senddatatovf', {
+            detail: { selectedEmployees: this.selectedEmployees }
+        });
+        this.dispatchEvent(event);
+    }
+
+    
+    sendDataToVFPage() {
+        // Send selected employees to Visualforce page
+        window.location.href = 'convention.page?selectedEmployees=' + JSON.stringify(this.selectedEmployees);
+    }
+    
 }
