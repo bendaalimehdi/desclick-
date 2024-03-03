@@ -1,14 +1,17 @@
+import generatePdf from '@salesforce/apex/Combobox.generatePdf';
 import getEmployeeNames from '@salesforce/apex/Combobox.getEmployeeNames';
 import OpportunityId from '@salesforce/schema/Opportunity.Id';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { getFieldValue, getRecord } from 'lightning/uiRecordApi';
 import { LightningElement, api, track, wire } from 'lwc';
 
-export default class MyComponent extends LightningElement {
-    _selected = [];
+export default class GetInfo extends LightningElement {
     @api recordId;
     error;
-   @track employeeOptions = []; 
-   @api selectedEmployees = [];
+    @track activateButton = true;
+    @track showComponent = true;
+    @track employeeOptions = [];
+    selectedEmployees = [];
     @wire(getRecord, { recordId: '$recordId', fields: [OpportunityId] })
     wiredRecord({ error, data }) {
         if (data) {
@@ -16,7 +19,7 @@ export default class MyComponent extends LightningElement {
             getEmployeeNames({ opportunityId: this.OppId })
                 .then(result => {
                     if (result && result.length > 0) {
-                        this.employeeOptions = result.map(name => ({ label: name, value: name }));
+                        this.employeeOptions = result.map(con => ({ label: con.Name, value: con.Id }));
                     } else {
                         this.error = 'No employee names found';
                     }
@@ -30,26 +33,48 @@ export default class MyComponent extends LightningElement {
             this.error = 'Error loading record';
         }
     }
-    get selected() {
-        return this._selected.length ? this._selected : 'none';
-    }
-   // handleChange(event) {
-     //   this._selected = event.detail.value;
-       // // Track selected employees
-        t//his.selectedEmployees = this._selected.map(emp => ({ label: emp, value: emp }));
 
-   // }
-    handleSendDataToVF() {
-        const event = new CustomEvent('senddatatovf', {
-            detail: { selectedEmployees: this.selectedEmployees }
+    handleChange(event) {
+        var selected = [];
+        var options  = event.target.options;
+        var detail = event.detail;
+        var i,j;
+        for(i = 0; i < options.length; i++) {
+            for(j = 0; j < detail.value.length; j++) {
+                if(options[i].value === detail.value[j]) {
+                    selected.push(options[i].value);
+                }
+            }
+        this.selectedEmployees = selected;
+        this.activateButton = false;
+    }
+}
+
+
+    handleSelected() {
+        generatePdf({ employeeList: this.selectedEmployees, recordId : this.recordId }).then(result => {
+            console.log('result', result);
+            const event = new ShowToastEvent({
+                title: 'Succès',
+                message:
+                    'Mail envoyé avec succès',
+                variant: 'success',
+            });
+            this.dispatchEvent(event);
+            this.showComponent = false;
+    })
+    .catch((error) => {
+        console.log('error', error);
+        const event = new ShowToastEvent({
+            title: 'Erreur',
+            message:
+                'Erreure lors de l\'envoie du mail',
+            variant: 'error',
         });
         this.dispatchEvent(event);
-    }
-
+        this.showButton = false;
+    });
     
-    sendDataToVFPage() {
-        // Send selected employees to Visualforce page
-        window.location.href = 'convention.page?selectedEmployees=' + JSON.stringify(this.selectedEmployees);
     }
     
 }

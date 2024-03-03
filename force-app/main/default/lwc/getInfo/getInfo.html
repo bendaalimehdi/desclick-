@@ -1,4 +1,5 @@
 <template>
+    <template if:true={showComponent}>
     <template if:true={error}>
         <p>{error}</p>
     </template>
@@ -27,6 +28,8 @@
             class="slds-align--absolute-center slds-m-top--large" 
             label="Send" 
             title="send" 
-            onclick={sendDataToVFPage}>
+            onclick={handleSelected}
+            disabled={activateButton}>
         </lightning-button>
+    </template>
 </template>
