@@ -41,10 +41,13 @@ public class OpportunityEmailHandler {
                 attach.setFileName('Quote.pdf');
                 attach.setBody(pdfBlob);
 
+                
                 Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                email.setWhatId(opp.Id);
                 email.setSubject('Devis');
                 email.setToAddresses(new List<String>{opp.Account.Email__c});
                 email.setPlainTextBody('Bonjour, voila votre devis');
+                email.setSaveAsActivity(true);
 
                 Id orgWideAddressId = [SELECT Id, Address, DisplayName FROM OrgWideEmailAddress LIMIT 1].Id;
                 email.setOrgWideEmailAddressId(orgWideAddressId);

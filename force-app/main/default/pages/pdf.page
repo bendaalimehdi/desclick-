@@ -1,37 +1,44 @@
-<apex:page standardController="Opportunity" renderAs="pdf">
-
-    <apex:pageBlock title="Devis N°: {!Opportunity.N_Dossier__c}">
-        <apex:pageBlockSection title="Opportunity Information">
-            <apex:outputText value="Account Name: {!Opportunity.Account.Name}" />
-            <br/>
-
-            <apex:outputText value="Account Address: {!Opportunity.Account.BillingStreet}, {!Opportunity.Account.BillingCity}, {!Opportunity.Account.BillingPostalCode}, {!Opportunity.Account.BillingCountry}" />
-            <br/>
-
-            <apex:outputText value="N°Siret: {!Opportunity.Account.Siret__c}" />
-            <br/>
-        </apex:pageBlockSection>
-
-        <apex:pageBlockSection title="Quote Details" columns="1">
-    <apex:pageBlockTable value="{!Opportunity}" var="opp" style="border:1px solid black;">
-        <apex:column headerValue="Heure de Formation" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Heure_formation__c}" />
-        </apex:column>
-        <apex:column headerValue="Nombre de Stagiaire" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Nombre_de_Stagire__c}" />
-        </apex:column>
-        <apex:column headerValue="Prix Horaire" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Prix_horaire__c}" />
-        </apex:column>
-        <apex:column headerValue="Total" style="border:1px solid black;">
-            <apex:outputText value="{!opp.Heure_formation__c * opp.Nombre_de_Stagire__c * opp.Prix_horaire__c}" />
-        </apex:column>
-    </apex:pageBlockTable>
-
-    <br/>
-    <apex:outputText value="Total TTC: {!Opportunity.Heure_formation__c * Opportunity.Nombre_de_Stagire__c * Opportunity.Prix_horaire__c * 1.18}" style="font-weight:bold; border:1px solid black; padding:5px;" />
-</apex:pageBlockSection>
-
-    </apex:pageBlock>
-
+<apex:page standardController="Opportunity" renderAs="pdf" applyBodyTag="True">
+    <head>
+        <!-- Reference to external CSS file -->
+        <apex:stylesheet value="{!URLFOR($Resource.pdfStyle)}"/>
+    </head>
+    <body>
+        <div class="header">
+            <img src="{!URLFOR($Resource.LogoDC)}" alt="Your Logo" class="logo"/>
+        </div>
+        
+        <div class="container">
+            <div class="title">Devis N°: <apex:outputField value="{!Opportunity.N_Dossier__c}"/></div>
+            
+            <div class="tab">
+                <div class="tab-title">Opportunity Information</div>
+                <p>Account Name: <apex:outputField value="{!Opportunity.Account.Name}"/></p>
+                <p>Account Address: <apex:outputField value="{!Opportunity.Account.BillingStreet}"/>, <apex:outputField value="{!Opportunity.Account.BillingCity}"/>, <apex:outputField value="{!Opportunity.Account.BillingPostalCode}"/>, <apex:outputField value="{!Opportunity.Account.BillingCountry}"/></p>
+                <p>N°Siret: <apex:outputField value="{!Opportunity.Account.Siret__c}"/></p>
+            </div>
+            
+            <div class="tab">
+                <div class="tab-title">Quote Details</div>
+                <apex:form>
+                    <apex:pageBlock>
+                        <table class="custom-table">
+                            <tr class="table-header">
+                                <th>Heure de Formation</th>
+                                <th>Nombre de Stagiaire</th>
+                                <th>Prix Horaire</th>
+                                <th>Total</th>
+                            </tr>
+                            <tr>
+                                <td>{!Opportunity.Nombre_de_Stagire__c}</td>
+                                <td><apex:outputText value="{!Opportunity.Nombre_de_Stagire__c}" /></td>
+                                <td>{!Opportunity.prix_horaire__c}</td>
+                                <td><apex:outputText value="$ {!Opportunity.Heure_formation__c * Opportunity.Nombre_de_Stagire__c * Opportunity.prix_horaire__c}" /></td>
+                            </tr>
+                        </table>
+                    </apex:pageBlock>
+                </apex:form>
+            </div>
+        </div>
+    </body>
 </apex:page>

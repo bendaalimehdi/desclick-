@@ -1,0 +1,9 @@
+<apex:component controller="EmployeController">
+    <apex:attribute name="selectedRecordId" type="String" description="The selected record Id" />
+    
+    <apex:form>
+        <apex:selectList value="{!selectedRecordId}" size="1">
+            <apex:selectOptions value="{!employeRecords}" />
+        </apex:selectList>
+    </apex:form>
+</apex:component>

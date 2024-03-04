@@ -1,0 +1,18 @@
+<apex:page standardController="Opportunity" extensions="MyControllerExtension">
+    
+    <body>
+        <apex:form>
+            <apex:pageBlock title="Related Records">
+                <apex:pageBlockTable value="{!relatedRecords}" var="recordWrapper">
+                    <apex:column headerValue="Select">
+                        <apex:inputCheckbox value="{!recordWrapper.selected}"/>
+                    </apex:column>
+                    <apex:column value="{!recordWrapper.record.Name}" headerValue="Name"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:commandButton value="Save" action="{!save}"/>
+        <apex:commandButton value="Cancel" action="{!cancel}"/>
+        </apex:form>
+        
+    </body>
+</apex:page>

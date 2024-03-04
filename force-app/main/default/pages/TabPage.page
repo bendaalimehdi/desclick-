@@ -1,0 +1,13 @@
+<apex:page standardController="Opportunity" extensions="MyController">
+    <apex:form >
+        <br/>
+        <apex:selectList value="{!selectedFormateur}" size="1">
+            <apex:selectOptions value="{!formateurs}"/>
+        </apex:selectList>
+        <br/>
+        <apex:selectList value="{!selectedEmployees}" multiselect="true">
+            <apex:selectOptions value="{!employees}"/>
+        </apex:selectList>
+        <br/>
+    </apex:form>
+</apex:page>
