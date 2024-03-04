@@ -1,5 +1,4 @@
 public class Combobox {
-   
     @AuraEnabled(cacheable=true)
     public static List<Contact> getEmployeeNames(String opportunityId){
         List<Contact> contacts = new List<Contact>();
@@ -20,14 +19,17 @@ public class Combobox {
     }
 
     @AuraEnabled
-    public static string generatePdf(List<String> employeeList, String recordId){
+    public static String generatePdf(List<String> employeeList, String recordId ){
         System.debug('employeeList : ' + employeeList);
         Pagereference pdfPage = Page.convention;
         Attachment objAttachment = new Attachment();
         
         try {
             pdfPage.getParameters().put('selectedEmployees', generateEmployeeList(employeeList));
-
+            pdfPage.getParameters().put('generateAdress', generateAdress(recordId));
+            pdfPage.getParameters().put('generateAccountName', generateAccountName(recordId));
+            pdfPage.getParameters().put('generatecontactName', generatecontactName(recordId));
+            
             Opportunity myOpportunity = [SELECT Id FROM Opportunity WHERE Id = :recordId LIMIT 1];
             ContentVersion contentVersionPDFToInsert = new ContentVersion(
                 Title='Convention',
@@ -63,6 +65,38 @@ public class Combobox {
             result += count + '- ' + c.FirstName + ' ' + c.LastName + ' -  ' + c.Fonction__c + '<br/>';
             count ++;
         }
+        return result;
+    }
+    public static  String generateAdress (String recordId){
+        String result = '';
+        Opportunity opp = [SELECT Id, AccountId FROM Opportunity WHERE Id = :recordId LIMIT 1];
+        Account acc = [SELECT Id, BillingStreet, BillingCity, BillingPostalCode, BillingCountry FROM Account WHERE Id = :opp.AccountId LIMIT 1];
+        result = acc.BillingStreet + ' ' + acc.BillingCity + ' ' + acc.BillingPostalCode + ' ' + acc.BillingCountry;
+        return result;
+    }
+    public static String generateAccountName (String recordId){
+        String result = '';
+        Opportunity opp = [SELECT Id, AccountId FROM Opportunity WHERE Id = :recordId LIMIT 1];
+        Account acc = [SELECT Id, Name FROM Account WHERE Id = :opp.AccountId LIMIT 1];
+        result = ' ' + acc.Name + ' ';
+        System.debug(result);
+        return result;
+    }
+    public static String generateContactName(String recordId) {
+        String result = '';
+        
+        Opportunity opp = [SELECT Id, ContactId FROM Opportunity WHERE Id = :recordId LIMIT 1];
+        
+        if (opp != null && opp.ContactId != null) {
+            Contact con = [SELECT Id, Salutation, FirstName, LastName, Fonction__c FROM Contact WHERE Id = :opp.ContactId AND Fonction__c = 'Gérant' LIMIT 1];
+
+            
+            if (con != null) {
+                
+                result = con.Salutation + ' ' + con.FirstName + ' ' + con.LastName + ' en qualité de ' + con.Fonction__c;
+            }
+        }
+        
         return result;
     }
 }

@@ -52,7 +52,9 @@ export default class GetInfo extends LightningElement {
 
 
     handleSelected() {
-        generatePdf({ employeeList: this.selectedEmployees, recordId : this.recordId }).then(result => {
+        generatePdf({
+             employeeList: this.selectedEmployees,
+              recordId : this.recordId }).then(result => {
             console.log('result', result);
             const event = new ShowToastEvent({
                 title: 'Succès',

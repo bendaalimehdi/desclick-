@@ -1,26 +1,23 @@
-<apex:page controller="MyControllerExtension" renderAs="pdf" applyBodyTag="True" >
+<apex:page  standardController="Opportunity" extensions="MyControllerExtension" renderAs="pdf" applyBodyTag="True" >
     <html>
         <head>
             <title>Convention de Formation Professionnelle</title>
+            <title > </title>
+         
         </head>
         <body>
             <apex:form>
+                <script>
+                    var opportunityId = '{!$CurrentPage.parameters.opportunityId}';
+                    var accountName = '{!Opportunity.Account.Name}';
+
+                    // You can now use opportunityId as needed
+                </script>
                 <h1>CONVENTION DE FORMATION PROFESSIONNELLE</h1>
                 <p>Entre les soussignés :</p>
                 <p>La société DC WEB APS domiciliée au 3, rue Lech Walesa 94270 Le Kremlin Bicêtre et enregistrée sous le numéro de déclaration d'activité 11 94 101 81 94 auprès de la Direction Régionale des Entreprises, de la Concurrence, de la Consommation, du Travail et de l’Emploi en Île de France (DIRECCTE Île de France).</p>
-                <p>La société  domiciliée et représentée par :</p>
-                <table>
-                    <tr>
-                        <th>Civilité</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Fonction</th>
-                    </tr>
-                    <tr>
-                        <td>Monsieur</td>
-                        <td>Gérant</td>
-                    </tr>
-                </table>
+                <p>La société <apex:outputtext value="{!generateAccountName}" escape="false"/>  <apex:outputtext value="{!generateAdress}" escape="false"/> et représentée par :</p>
+                <p>Madame/Monsieur <apex:outputtext value="{!generateContactName}" escape="false"/> </p>
 
                 <p>Article 1er : Objet de la convention</p>
                 <p>L’organisme DC WEB APS organisera l’action de formation suivante :</p>
@@ -30,7 +27,7 @@
                 <p>Programme et méthodes : joints en annexe</p>
                 <p>Type d’action de formation (article L.6313-1 du Code du travail): Action de formation</p>
                 <p>Durée : 14 heures</p>
-                <p>Lieu:  domiciliée 9 Place de la Halle 41500 - Mer</p>
+                <p>Lieu:<apex:outputtext value="{!generateAccountName}" escape="false"/> domiciliée <apex:outputtext value="{!generateAdress}" escape="false"/></p>
                 <p>Dates et horaires : du 15/02/2023 au 16/02/2023 de 9:00 à 12:30 et de 13:30 à 17 :00</p>
 
                 <p>Article 2 : Effectif formé</p>
@@ -63,17 +60,17 @@
 
                 <p>Article 5 : Modalités de règlement</p>
                 <p>En cas de paiement effectué par un OPCO, l’Etablissement s’engage à effectuer la demande de prise en charge avant le début de la formation.</p>
-                <!-- <p>En cas de prise en charge partielle par l’OPCO, la différence de coût restera à la charge de la société {!Opportunity.Account.Name}</p> -->
-
+                <p>En cas de prise en charge partielle par l’OPCO, la différence de coût restera à la charge de la société <apex:outputtext value="{!generateAccountName}" escape="false"/></p> 
+                <p>En cas de refus de prise en charge par l’OPCO, ou si l’accord de prise en charge par l’OPCO ne nous parvient pas au 1er jour de la formation, la totalité des frais de formation sera facturée à la société<apex:outputtext value="{!generateAccountName}" escape="false"/>.</p>
                 <p>Article 6 : Dédit ou abandon</p>
-                <!-- Add details from Article 6 -->
+                <p>En cas de dédit par l’entreprise à moins de 15 jours francs avant le début de l’action mentionnée à l’article 1, ou d’abandon en cours de formation par un ou plusieurs stagiaires, l’organisme remboursera sur le coût total, les sommes qu’il n’aura pas réellement dépensées ou engagées pour la réalisation de ladite action.</p>
 
                 <p>Article 7 : Différends éventuels</p>
-                <!-- Add details from Article -->
-
+                <p>Si une contestation ou un différend ne peuvent être réglés à l’amiable, le Tribunal de Créteil sera seul compétent pour régler le litige.</p>
+                
                 <p>Fait en double exemplaire, à Le Kremlin Bicêtre, le 06/01/2023</p>
                 <p>Pour l’entreprise</p>
-                <p>(nom et qualité du signataire)</p>
+                <p><apex:outputtext value="{!generateContactName}" escape="false"/></p>
                 <p>Cachet de l’entreprise cliente</p>
                 <p>Pour l’organisme</p>
                 <p>Faouzi Djaber en Qualité de Président Directeur Général</p>
